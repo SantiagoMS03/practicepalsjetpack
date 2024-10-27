@@ -11,7 +11,8 @@ constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.8.3"
 navigationUiKtx = "2.8.3"
 compose = "1.5.1"  # Add the latest stable version of Compose
-navigationCompose = "2.6.0"  # Add version for Navigation Compose
+navigationCompose = "2.6.0"
+material3Android = "1.3.0"  # Add version for Navigation Compose
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +34,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 # Compose Tooling
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

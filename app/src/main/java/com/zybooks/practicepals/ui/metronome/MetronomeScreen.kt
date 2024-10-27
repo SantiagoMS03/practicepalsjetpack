@@ -1,5 +1,6 @@
 package com.zybooks.practicepals.ui.metronome
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -14,10 +15,13 @@ import com.zybooks.practicepals.utilities.Metronome
 import com.zybooks.practicepals.viewmodel.MetronomeViewModel
 
 @Composable
-fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
+fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel<MetronomeViewModel>()) {
     val tempo by viewModel.tempo.collectAsState()
     val timeSignature by viewModel.timeSignature.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
+
+    var showBpmDialog by remember { mutableStateOf(false) }
+    var showTimeSignatureDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -35,7 +39,13 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
                 Icon(painterResource(id = R.drawable.ic_minus), contentDescription = "Decrease BPM")
             }
 
-            Text(text = "$tempo BPM", fontSize = 32.sp, modifier = Modifier.padding(horizontal = 16.dp))
+            Text(
+                text = "$tempo BPM",
+                fontSize = 32.sp,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clickable { showBpmDialog = true }
+            )
 
             IconButton(onClick = viewModel::increaseTempo) {
                 Icon(painterResource(id = R.drawable.ic_plus), contentDescription = "Increase BPM")
@@ -45,7 +55,11 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Time Signature Display
-        Text(text = "Time Signature: $timeSignature", fontSize = 20.sp)
+        Text(
+            text = "Time Signature: $timeSignature",
+            fontSize = 20.sp,
+            modifier = Modifier.clickable { showTimeSignatureDialog = true }
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -61,4 +75,23 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
             )
         }
     }
+
+    // BPM Dialog
+    if (showBpmDialog) {
+        BpmKeypadDialog(
+            onDismiss = { showBpmDialog = false },
+            onSetBpm = { bpm -> viewModel.setTempo(bpm) },
+            initialBpm = tempo
+        )
+    }
+
+    // Time Signature Dialog
+    if (showTimeSignatureDialog) {
+        TimeSignatureDialog(
+            onDismiss = { showTimeSignatureDialog = false },
+            onSetNumerator = { numerator -> viewModel.setTimeSignature(numerator) },
+            initialNumerator = timeSignature.split("/")[0].toInt()
+        )
+    }
+
 }

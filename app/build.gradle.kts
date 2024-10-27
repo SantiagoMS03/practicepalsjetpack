@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.navigation.compose)
+    implementation(libs.androidx.material3.android)
 
     // Compose tooling (optional, for previews and testing)
     debugImplementation(libs.compose.ui.tooling)

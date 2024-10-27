@@ -28,12 +28,12 @@ class MetronomeViewModel(application: Application) : AndroidViewModel(applicatio
         setTempo(newTempo)
     }
 
-    private fun setTempo(newTempo: Int) {
+    fun setTempo(newTempo: Int) {
         metronome.setTempo(newTempo)
         _tempo.value = newTempo
     }
 
-    fun setNumerator(newNumerator: Int) {
+    fun setTimeSignature(newNumerator: Int) {
         metronome.setNumerator(newNumerator)
         _timeSignature.value = metronome.signatureString
     }
