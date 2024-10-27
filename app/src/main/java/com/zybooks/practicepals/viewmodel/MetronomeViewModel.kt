@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.zybooks.practicepals.utilities.Metronome
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MetronomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -47,8 +48,25 @@ class MetronomeViewModel(application: Application) : AndroidViewModel(applicatio
         _isPlaying.value = metronome.isPlaying()
     }
 
+
     override fun onCleared() {
         super.onCleared()
         metronome.release()
     }
+    // Dialog visibility flows
+    private val _showBpmDialog = MutableStateFlow(false)
+    val showBpmDialog: StateFlow<Boolean> = _showBpmDialog.asStateFlow()
+
+    private val _showTimeSignatureDialog = MutableStateFlow(false)
+    val showTimeSignatureDialog: StateFlow<Boolean> = _showTimeSignatureDialog.asStateFlow()
+
+    // Toggle dialog visibility
+    fun setShowBpmDialog(show: Boolean) {
+        _showBpmDialog.value = show
+    }
+
+    fun setShowTimeSignatureDialog(show: Boolean) {
+        _showTimeSignatureDialog.value = show
+    }
+
 }

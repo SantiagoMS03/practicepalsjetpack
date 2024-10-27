@@ -8,12 +8,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.zybooks.practicepals.ui.home.HomeScreen
 import com.zybooks.practicepals.ui.theme.PracticePalsTheme
 import com.zybooks.practicepals.ui.metronome.MetronomeScreen
+import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
+import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.theme.PracticePalsTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +39,21 @@ fun MainNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
         composable("metronome") { MetronomeScreen() }
+        composable("pieces") {
+            PieceListScreen(
+                onUserClick = { pieceId ->
+                    navController.navigate("pieceDetail/$pieceId")
+                }
+            )
+        }
+        composable(
+            route = "pieceDetail/{pieceId}",
+            arguments = listOf(navArgument("pieceId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val pieceId = backStackEntry.arguments?.getInt("pieceId") ?: return@composable
+            PieceDetailScreen(pieceId)
+        }
+
         // Add other screens as needed
     }
 }

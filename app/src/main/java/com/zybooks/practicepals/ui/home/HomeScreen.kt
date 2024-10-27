@@ -26,6 +26,12 @@ fun HomeScreen(navController: NavController) {
             Text("Go to Metronome")
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("pieces") }) {
+            Text("Go to Pieces")
+        }
+
         // Add more buttons here for other screens
     }
 }

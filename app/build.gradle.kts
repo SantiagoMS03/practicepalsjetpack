@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.runtime.livedata)
 
     // Compose tooling (optional, for previews and testing)
     debugImplementation(libs.compose.ui.tooling)
