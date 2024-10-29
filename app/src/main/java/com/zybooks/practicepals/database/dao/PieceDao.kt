@@ -1,20 +1,19 @@
 package com.zybooks.practicepals.database.dao
 
 import androidx.room.*
-import androidx.room.Dao
 import com.zybooks.practicepals.database.entities.Piece
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PieceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(piece: Piece)
+    suspend fun insert(piece: Piece)  // Return the new row ID
 
     @Update
-    suspend fun update(piece: Piece)
+    suspend fun update(piece: Piece)   // Return the number of rows updated
 
     @Delete
-    suspend fun delete(piece: Piece)
+    suspend fun delete(piece: Piece)   // Return the number of rows deleted
 
     @Query("SELECT * FROM pieces WHERE pieceId = :pieceId")
     fun getPieceById(pieceId: Int): Flow<Piece>
@@ -23,5 +22,5 @@ interface PieceDao {
     fun getAllPieces(): Flow<List<Piece>>
 
     @Query("DELETE FROM pieces")
-    suspend fun deleteAll()
+    suspend fun deleteAll()            // Return the number of rows deleted
 }

@@ -11,22 +11,22 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import com.zybooks.practicepals.database.dao.PieceDao
 import com.zybooks.practicepals.viewmodel.PieceViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun PieceListScreen (viewModel: PieceViewModel = viewModel(), onUserClick: (Int) -> Unit) {
+fun PieceListScreen(
+    viewModel: PieceViewModel = hiltViewModel(),
+    onAddPieceClick: () -> Unit,
+    onPieceClick: (Int) -> Unit)
+{
     val pieces by viewModel.piecesFlow.collectAsState()
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                /* Navigate to Add User Screen */
-            }) {
-                Icon(Icons.Default.Add, contentDescription = "Add User")
+            FloatingActionButton(onClick = onAddPieceClick) {
+                Icon(Icons.Default.Add, contentDescription = "Add Piece")
             }
         }
     ) { padding ->
@@ -36,9 +36,10 @@ fun PieceListScreen (viewModel: PieceViewModel = viewModel(), onUserClick: (Int)
                     headlineContent = { Text(piece.name) },
                     supportingContent = { Text(piece.composer)},
                     leadingContent = { Text(piece.totalTimePracticed.toString())},
-                    modifier = Modifier.clickable() { onUserClick(piece.pieceId) }
+                    modifier = Modifier.clickable() { onPieceClick(piece.pieceId) }
                 )
             }
         }
     }
 }
+

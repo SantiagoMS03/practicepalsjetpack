@@ -1,26 +1,33 @@
 package com.zybooks.practicepals.ui.pieces
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zybooks.practicepals.viewmodel.PieceViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun PieceDetailScreen(pieceId: Int, viewModel: PieceViewModel = viewModel()) {
+fun PieceDetailScreen(
+    pieceId: Int,
+    viewModel: PieceViewModel = hiltViewModel()
+) {
     val pieceFlow = remember(pieceId) { viewModel.getPieceDetails(pieceId) }
     val piece by pieceFlow.collectAsState(initial = null)
 
     piece?.let {
-        // Display the details of the piece
-        Text(text = "Piece Name: ${it.name}")
-        Text(text = "Composer: ${it.composer}")
-        Text(text = "Total Time Practiced: ${it.totalTimePracticed}")
-        // Add more details as needed
+        // Use a Column to arrange the Text components vertically
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "Piece Name: ${it.name}", fontSize = 20.sp)
+            Text(text = "Composer: ${it.composer}", fontSize = 16.sp)
+            Text(text = "Total Time Practiced: ${it.totalTimePracticed} minutes", fontSize = 16.sp)
+            // Add more details or actions as needed
+        }
     } ?: run {
         // Show a loading indicator or an error message
-        Text(text = "Loading...")
+        Text(text = "Loading...", modifier = Modifier.padding(16.dp))
     }
 }
