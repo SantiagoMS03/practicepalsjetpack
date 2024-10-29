@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.zybooks.practicepals.database.AppDatabase
 import com.zybooks.practicepals.database.dao.PieceDao
+import com.zybooks.practicepals.database.dao.PracticeLogDao
 import com.zybooks.practicepals.database.repository.PieceRepository
+import com.zybooks.practicepals.database.repository.PracticeLogRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +26,9 @@ object AppModule {
             appContext,
             AppDatabase::class.java,
             "practice_pals_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     // Provide PieceDao
@@ -33,9 +37,21 @@ object AppModule {
         return appDatabase.pieceDao()
     }
 
+    // Provide PracticeLogDao
+    @Provides
+    fun providePracticeLogDao(appDatabase: AppDatabase): PracticeLogDao {
+        return appDatabase.practiceLogDao()
+    }
+
     // Provide PieceRepository
     @Provides
     fun providePieceRepository(pieceDao: PieceDao): PieceRepository {
         return PieceRepository(pieceDao)
     }
+
+    @Provides
+    fun providePracticeLogRepository(practiceLogDao: PracticeLogDao): PracticeLogRepository {
+        return PracticeLogRepository(practiceLogDao)
+    }
+
 }

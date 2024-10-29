@@ -3,11 +3,16 @@ package com.zybooks.practicepals.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.zybooks.practicepals.utilities.Metronome
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class MetronomeViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MetronomeViewModel @Inject constructor(
+    application: Application
+) : AndroidViewModel(application) {
     private val metronome = Metronome.getInstance(application, 60, 4)
 
     private val _tempo = MutableStateFlow(metronome.getTempo())

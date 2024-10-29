@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pieces")
 data class Piece(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "piece_id")
     val pieceId: Int = 0, // Default value allows Room to auto-generate
 
     @ColumnInfo(name = "name")

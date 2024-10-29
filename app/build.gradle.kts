@@ -28,6 +28,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("boolean", "LOG_SQL_STATEMENTS", "true")
+
+        }
     }
 
     compileOptions {
@@ -43,6 +47,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = false  // Disable viewBinding since we’re switching to Compose
+        buildConfig = true
     }
 
     composeOptions {

@@ -15,7 +15,7 @@ interface PieceDao {
     @Delete
     suspend fun delete(piece: Piece)   // Return the number of rows deleted
 
-    @Query("SELECT * FROM pieces WHERE pieceId = :pieceId")
+    @Query("SELECT * FROM pieces WHERE piece_id = :pieceId")
     fun getPieceById(pieceId: Int): Flow<Piece>
 
     @Query("SELECT * FROM pieces ORDER BY date_added DESC")
