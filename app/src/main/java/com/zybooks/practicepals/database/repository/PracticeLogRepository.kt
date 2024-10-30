@@ -12,4 +12,7 @@ class PracticeLogRepository (private val practiceLogDao: PracticeLogDao){
     suspend fun addPracticeLog(practiceLog: PracticeLog) {
         practiceLogDao.insertPracticeLogAndUpdatePiece(practiceLog, practiceLog.timeLogged)
     }
+
+    fun getPracticeLogsFrom(startTime: Long): Flow<List<PracticeLog>> = practiceLogDao.getPracticeLogsFrom(startTime)
+
 }

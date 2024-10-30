@@ -1,29 +1,36 @@
 package com.zybooks.practicepals.ui.stopwatch
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.zybooks.practicepals.R
-import com.zybooks.practicepals.ui.practicelogs.NewPracticeLogDialog
-import com.zybooks.practicepals.ui.utilities.ContinueDialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.zybooks.practicepals.viewmodel.StopwatchViewModel
-import kotlin.math.floor
+import com.zybooks.practicepals.viewmodel.PieceViewModel
+import com.zybooks.practicepals.ui.practicelogs.NewPracticeLogDialog
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StopwatchScreen(viewModel: StopwatchViewModel = viewModel()) {
-    val elapsedTime by viewModel.elapsedTime.collectAsState()
+fun StopwatchScreen(
+    stopwatchViewModel: StopwatchViewModel = hiltViewModel(),
+    pieceViewModel: PieceViewModel = hiltViewModel()
+) {
+    val elapsedTime by stopwatchViewModel.elapsedTime.collectAsState()
 
-    // Formatting the time
+    // Time formatting for display
     val minutes = (elapsedTime / 60000).toInt()
     val seconds = ((elapsedTime % 60000) / 1000).toInt()
     val milliseconds = ((elapsedTime % 1000) / 10).toInt()
+
+    // State variables
+    val pieces by pieceViewModel.piecesFlow.collectAsState(emptyList())
+    var selectedPieceId by remember { mutableStateOf<Int?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -38,31 +45,75 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = viewModel()) {
             fontSize = 48.sp
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Buttons Row (Play/Pause and Stop)
-        Row(horizontalArrangement = Arrangement.Center) {
-            // Play/Pause Button
+        // Piece Selection Dropdown
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            OutlinedTextField(
+                value = pieces.find { it.pieceId == selectedPieceId }?.name ?: "Select Piece",
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Select Piece") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
+                    .clickable { expanded = true }
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                pieces.forEach { piece ->
+                    DropdownMenuItem(
+                        text = { Text(piece.name) },
+                        onClick = {
+                            selectedPieceId = piece.pieceId
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Start/Pause and Stop Buttons
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(
                 onClick = {
-                    if (viewModel.isRunning()) viewModel.pauseStopwatch() else viewModel.startStopwatch()
+                    if (stopwatchViewModel.isRunning()) stopwatchViewModel.pauseStopwatch()
+                    else stopwatchViewModel.startStopwatch()
                 }
             ) {
-                Text(if (viewModel.isRunning()) "Pause" else if (viewModel.hasStarted()) "Continue" else "Start")
+                Text(if (stopwatchViewModel.isRunning()) "Pause" else "Start")
             }
 
             Button(
                 onClick = {
-                    if (viewModel.isRunning()) { viewModel.pauseStopwatch() }
-                    NewPracticeLogDialog(
-                        elapsedTime = elapsedTime,
-                        pieceId = /* TODO */
-                    )
-                }
+                    if (stopwatchViewModel.isRunning()) stopwatchViewModel.pauseStopwatch()
+                    if (selectedPieceId != null) showDialog = true  // Only open dialog if a piece is selected
+                },
+                enabled = selectedPieceId != null
             ) {
                 Text("Stop")
             }
-
         }
+    }
+
+    // Show NewPracticeLogDialog when the stopwatch is stopped
+    if (showDialog) {
+        NewPracticeLogDialog(
+            elapsedTime = elapsedTime,
+            pieceId = selectedPieceId!!,
+            onPracticeLogAdded = {
+                showDialog = false
+                stopwatchViewModel.resetStopwatch()
+            },
+            onDismissRequest = { showDialog = false }
+        )
     }
 }

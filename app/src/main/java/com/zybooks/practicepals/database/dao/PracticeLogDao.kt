@@ -36,5 +36,8 @@ interface PracticeLogDao {
     @Query("UPDATE pieces SET total_time_practiced = total_time_practiced + :timeToAdd WHERE piece_id = :pieceId")
     suspend fun updatePieceTotalTime(pieceId: Int, timeToAdd: Long)
 
+    @Query("SELECT * FROM practice_logs WHERE date_added >= :startTime")
+    fun getPracticeLogsFrom(startTime: Long): Flow<List<PracticeLog>>
+
 
 }

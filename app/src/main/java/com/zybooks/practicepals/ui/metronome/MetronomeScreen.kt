@@ -1,3 +1,4 @@
+// MetronomeScreen.kt
 package com.zybooks.practicepals.ui.metronome
 
 import androidx.compose.foundation.clickable
@@ -13,7 +14,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.practicepals.R
 import com.zybooks.practicepals.viewmodel.MetronomeViewModel
 import com.zybooks.practicepals.viewmodel.PieceViewModel
@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MetronomeScreen(
-    metronomeViewModel: MetronomeViewModel = viewModel(),
+    metronomeViewModel: MetronomeViewModel = hiltViewModel(),
     pieceViewModel: PieceViewModel = hiltViewModel()
 ) {
     val tempo by metronomeViewModel.tempo.collectAsState()
@@ -49,7 +49,6 @@ fun MetronomeScreen(
                     focusManager.clearFocus()  // Dismiss keyboard on outside click
                 })
             }
-
     ) {
         Column(
             modifier = Modifier
@@ -104,7 +103,7 @@ fun MetronomeScreen(
 
             // Tempo Display and Controls
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = metronomeViewModel::decreaseTempo) {
+                IconButton(onClick = { metronomeViewModel.decreaseTempo() }) {
                     Icon(painterResource(id = R.drawable.ic_minus), contentDescription = "Decrease BPM")
                 }
 
@@ -116,7 +115,7 @@ fun MetronomeScreen(
                         .clickable { metronomeViewModel.setShowBpmDialog(true) }
                 )
 
-                IconButton(onClick = metronomeViewModel::increaseTempo) {
+                IconButton(onClick = { metronomeViewModel.increaseTempo() }) {
                     Icon(painterResource(id = R.drawable.ic_plus), contentDescription = "Increase BPM")
                 }
             }

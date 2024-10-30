@@ -35,7 +35,6 @@ fun PieceListScreen(
                 ListItem(
                     headlineContent = { Text(piece.name) },
                     supportingContent = { Text(piece.composer)},
-                    leadingContent = { Text(piece.totalTimePracticed.toString())},
                     modifier = Modifier.clickable() { onPieceClick(piece.pieceId) }
                 )
             }

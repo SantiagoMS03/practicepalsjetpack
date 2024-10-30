@@ -1,24 +1,30 @@
+// Metronome.kt (Updated)
 package com.zybooks.practicepals.utilities
 
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
 import com.zybooks.practicepals.R
-import kotlinx.coroutines.*
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class Metronome private constructor(
-    context: Context,
-    private var tempo: Int,
-    private var numerator: Int
+@Singleton
+class Metronome @Inject constructor(
+    @ApplicationContext private val context: Context,
+    @Named("MetronomeTempo") private var tempo: Int,
+    @Named("MetronomeNumerator") private var numerator: Int
 ) {
 
     private var isPlaying = false
     private val soundPool: SoundPool
-    private val metronomeSoundId: Int
-    private var job: Job? = null
+    private var metronomeSoundId: Int = 0
     private var denominator = 4
     val signatureString: String
         get() = "$numerator/$denominator"
+
+    private var isSoundLoaded = false
 
     init {
         val audioAttributes = AudioAttributes.Builder()
@@ -29,18 +35,22 @@ class Metronome private constructor(
             .setMaxStreams(5)
             .setAudioAttributes(audioAttributes)
             .build()
+
+        soundPool.setOnLoadCompleteListener { soundPool, sampleId, status ->
+            if (status == 0 && sampleId == metronomeSoundId) {
+                isSoundLoaded = true
+                // Log
+            } else {
+                // Handle error
+            }
+        }
+
         metronomeSoundId = soundPool.load(context, R.raw.audio1, 1)
     }
 
     fun start() {
-        if (isPlaying) return
+        if (isPlaying || !isSoundLoaded) return
         isPlaying = true
-        job = CoroutineScope(Dispatchers.IO).launch {
-            while (isPlaying) {
-                soundPool.play(metronomeSoundId, 1f, 1f, 0, 0, 1f)
-                delay((60_000 / tempo).toLong())
-            }
-        }
     }
 
     fun isPlaying(): Boolean {
@@ -49,12 +59,10 @@ class Metronome private constructor(
 
     fun stop() {
         isPlaying = false
-        job?.cancel()
     }
 
     fun setTempo(newTempo: Int) {
         tempo = newTempo
-        if (isPlaying) restart()
     }
 
     fun getTempo(): Int {
@@ -63,29 +71,19 @@ class Metronome private constructor(
 
     fun setNumerator(newNumerator: Int) {
         numerator = newNumerator
-        if (isPlaying) restart()
-    }
-
-    private fun restart() {
-        stop()
-        start()
     }
 
     fun release() {
         soundPool.release()
-        job?.cancel()
+    }
+
+    fun playTick() {
+        if (isSoundLoaded) {
+            soundPool.play(metronomeSoundId, 1f, 1f, 0, 0, 1f)
+        }
     }
 
     companion object {
-        private var instance: Metronome? = null
-
-        fun getInstance(context: Context, initialTempo: Int = 60, initialNumerator: Int = 4): Metronome {
-            if (instance == null) {
-                instance = Metronome(context, initialTempo, initialNumerator)
-            }
-            return instance!!
-        }
-
         const val MAX_METRONOME_BPM = 300
         const val MIN_METRONOME_BPM = 10
     }

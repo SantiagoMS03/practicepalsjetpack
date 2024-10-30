@@ -2,12 +2,15 @@ package com.zybooks.practicepals.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StopwatchViewModel : ViewModel() {
+@HiltViewModel
+class StopwatchViewModel @Inject constructor() : ViewModel() {
 
     private val _elapsedTime = MutableStateFlow(0L) // Time in milliseconds
     val elapsedTime: StateFlow<Long> = _elapsedTime

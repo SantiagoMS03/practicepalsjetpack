@@ -22,7 +22,6 @@ fun NewPieceScreen(
 ) {
     var name by remember { mutableStateOf("") }
     var composer by remember { mutableStateOf("") }
-    var totalTimePracticed by remember { mutableStateOf("") }
 
         Column(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
@@ -39,20 +38,11 @@ fun NewPieceScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            OutlinedTextField(
-                value = totalTimePracticed,
-                onValueChange = { totalTimePracticed = it },
-                label = { Text("Total Time Practiced (minutes)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.padding(bottom = 16.dp),
-            )
-
             Button(
                 onClick = {
                     val piece = Piece(
                         name = name,
                         composer = composer,
-                        totalTimePracticed = totalTimePracticed.toLongOrNull() ?: 0
                     )
                     viewModel.addPiece(piece)
                     onPieceAdded() // Callback to navigate back

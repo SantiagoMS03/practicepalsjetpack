@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isIncludeCompileClasspath
 
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -84,9 +85,8 @@ dependencies {
     kapt(libs.hilt.compiler)          // Add this line
     implementation(libs.hilt.navigation.compose) // Add this line
 
-//    implementation(libs.room.runtime)          // Room runtime
-//    kapt(libs.room.compiler)                   // Room compiler for annotation processing
-//    implementation(libs.room.ktx)              // Room Kotlin extensions
+    implementation(libs.room.runtime)          // Room runtime
+    implementation(libs.room.ktx)              // Room Kotlin extensions
 
     // Room!
     implementation("androidx.room:room-runtime:$room_version")

@@ -1,28 +1,33 @@
+// MetronomeViewModel.kt
 package com.zybooks.practicepals.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.zybooks.practicepals.utilities.Metronome
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MetronomeViewModel @Inject constructor(
-    application: Application
-) : AndroidViewModel(application) {
-    private val metronome = Metronome.getInstance(application, 60, 4)
+    private val metronome: Metronome
+) : ViewModel() {
 
     private val _tempo = MutableStateFlow(metronome.getTempo())
-    val tempo = _tempo.asStateFlow()
+    val tempo: StateFlow<Int> = _tempo.asStateFlow()
 
     private val _timeSignature = MutableStateFlow(metronome.signatureString)
-    val timeSignature = _timeSignature.asStateFlow()
+    val timeSignature: StateFlow<String> = _timeSignature.asStateFlow()
 
     private val _isPlaying = MutableStateFlow(metronome.isPlaying())
-    val isPlaying = _isPlaying.asStateFlow()
+    val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
 
     fun increaseTempo() {
         val newTempo = (tempo.value + 1).coerceAtMost(Metronome.MAX_METRONOME_BPM)
@@ -47,10 +52,21 @@ class MetronomeViewModel @Inject constructor(
     fun togglePlayPause() {
         if (metronome.isPlaying()) {
             metronome.stop()
+            _isPlaying.value = false
+            Log.d(TAG, "Metronome paused.")
         } else {
             metronome.start()
+            _isPlaying.value = true
+            Log.d(TAG, "Metronome started.")
+            viewModelScope.launch(Dispatchers.IO) {
+                while (metronome.isPlaying()) {
+                    metronome.playTick()
+                    Log.d(TAG, "Metronome tick played.")
+                    delay(60_000L / metronome.getTempo())
+                }
+                Log.d(TAG, "Metronome stopped.")
+            }
         }
-        _isPlaying.value = metronome.isPlaying()
     }
 
 
@@ -58,6 +74,7 @@ class MetronomeViewModel @Inject constructor(
         super.onCleared()
         metronome.release()
     }
+
     // Dialog visibility flows
     private val _showBpmDialog = MutableStateFlow(false)
     val showBpmDialog: StateFlow<Boolean> = _showBpmDialog.asStateFlow()
@@ -73,5 +90,4 @@ class MetronomeViewModel @Inject constructor(
     fun setShowTimeSignatureDialog(show: Boolean) {
         _showTimeSignatureDialog.value = show
     }
-
 }

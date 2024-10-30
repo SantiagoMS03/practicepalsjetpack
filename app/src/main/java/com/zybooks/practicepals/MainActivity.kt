@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import com.zybooks.practicepals.ui.home.HomeScreen
 import com.zybooks.practicepals.ui.metronome.MetronomeScreen
+import com.zybooks.practicepals.ui.navigation.MainNavHost
 import com.zybooks.practicepals.ui.pieces.NewPieceScreen
 import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
@@ -27,46 +28,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PracticePalsTheme {
-                val navController = rememberNavController()
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    MainNavHost(navController = navController)
+                    MainNavHost() // The navController is managed within MainNavHost
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MainNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
-            HomeScreen(navController)
-        }
-        composable("metronome") {
-            MetronomeScreen()
-        }
-        composable("pieces") {
-            PieceListScreen(
-                onAddPieceClick = { navController.navigate("add_piece") },
-                onPieceClick = { pieceId ->
-                    navController.navigate("pieceDetail/$pieceId")
-                }
-            )
-        }
-        composable(
-            route = "pieceDetail/{pieceId}",
-            arguments = listOf(navArgument("pieceId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val pieceId = backStackEntry.arguments?.getInt("pieceId") ?: return@composable
-            PieceDetailScreen(pieceId = pieceId)
-        }
-        composable("piece_list") {
-        }
-        composable("add_piece") {
-            NewPieceScreen(onPieceAdded = { navController.popBackStack() }) // Navigate back to list
-        }
-        composable("stopwatch") {
-            StopwatchScreen()
         }
     }
 }

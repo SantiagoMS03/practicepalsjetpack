@@ -38,6 +38,10 @@ fun HomeScreen(navController: NavController) {
             Text("Go to Stopwatch")
         }
 
+        Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
+            Text("View Practice Bar Chart")
+        }
+
         // Add more buttons here for other screens
     }
 }

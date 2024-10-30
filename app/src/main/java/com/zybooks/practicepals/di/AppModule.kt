@@ -1,3 +1,4 @@
+// AppModule.kt
 package com.zybooks.practicepals.di
 
 import android.content.Context
@@ -12,13 +13,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // Provide AppDatabase
+    // Provide AppDatabase as a Singleton
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
@@ -31,27 +33,31 @@ object AppModule {
             .build()
     }
 
-    // Provide PieceDao
+    // Provide DAOs
     @Provides
-    fun providePieceDao(appDatabase: AppDatabase): PieceDao {
-        return appDatabase.pieceDao()
-    }
-
-    // Provide PracticeLogDao
-    @Provides
-    fun providePracticeLogDao(appDatabase: AppDatabase): PracticeLogDao {
-        return appDatabase.practiceLogDao()
-    }
-
-    // Provide PieceRepository
-    @Provides
-    fun providePieceRepository(pieceDao: PieceDao): PieceRepository {
-        return PieceRepository(pieceDao)
-    }
+    fun providePieceDao(appDatabase: AppDatabase): PieceDao = appDatabase.pieceDao()
 
     @Provides
-    fun providePracticeLogRepository(practiceLogDao: PracticeLogDao): PracticeLogRepository {
-        return PracticeLogRepository(practiceLogDao)
-    }
+    fun providePracticeLogDao(appDatabase: AppDatabase): PracticeLogDao = appDatabase.practiceLogDao()
 
+    // Provide Repositories as Singletons
+    @Provides
+    @Singleton
+    fun providePieceRepository(pieceDao: PieceDao): PieceRepository = PieceRepository(pieceDao)
+
+    @Provides
+    @Singleton
+    fun providePracticeLogRepository(practiceLogDao: PracticeLogDao): PracticeLogRepository = PracticeLogRepository(practiceLogDao)
+
+    // Provide Metronome Tempo
+    @Provides
+    @Named("MetronomeTempo")
+    fun provideMetronomeTempo(): Int = 60  // Default BPM
+
+    // Provide Metronome Numerator
+    @Provides
+    @Named("MetronomeNumerator")
+    fun provideMetronomeNumerator(): Int = 4  // Default Time Signature Numerator
+
+    // No longer need to provide Metronome here as it's provided via @Inject constructor in Metronome.kt
 }
