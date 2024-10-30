@@ -18,6 +18,7 @@ import com.zybooks.practicepals.ui.metronome.MetronomeScreen
 import com.zybooks.practicepals.ui.pieces.NewPieceScreen
 import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
+import com.zybooks.practicepals.ui.stopwatch.StopwatchScreen
 import com.zybooks.practicepals.ui.theme.PracticePalsTheme
 
 @AndroidEntryPoint
@@ -63,6 +64,9 @@ fun MainNavHost(navController: NavHostController) {
         }
         composable("add_piece") {
             NewPieceScreen(onPieceAdded = { navController.popBackStack() }) // Navigate back to list
+        }
+        composable("stopwatch") {
+            StopwatchScreen()
         }
     }
 }
