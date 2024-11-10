@@ -36,5 +36,11 @@ class PracticeLogViewModel @Inject constructor(
         return practiceLogRepository.getPracticeLogsFrom(startTime)
     }
 
+    fun removePracticeLog(practiceLog: PracticeLog) {
+        viewModelScope.launch {
+            practiceLogRepository.removePracticeLog(practiceLog)
+        }
+    }
+
     // ... other methods as needed ...
 }

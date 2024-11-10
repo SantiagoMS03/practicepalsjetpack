@@ -9,10 +9,14 @@ class PracticeLogRepository (private val practiceLogDao: PracticeLogDao){
 
     fun getPracticeLogsForPiece(pieceId: Int): Flow<List<PracticeLog>> = practiceLogDao.getPracticeLogsForPiece(pieceId)
 
+    fun getPracticeLogsFrom(startTime: Long): Flow<List<PracticeLog>> = practiceLogDao.getPracticeLogsFrom(startTime)
+
     suspend fun addPracticeLog(practiceLog: PracticeLog) {
         practiceLogDao.insertPracticeLogAndUpdatePiece(practiceLog, practiceLog.timeLogged)
     }
 
-    fun getPracticeLogsFrom(startTime: Long): Flow<List<PracticeLog>> = practiceLogDao.getPracticeLogsFrom(startTime)
+    suspend fun removePracticeLog(practiceLog: PracticeLog) {
+        practiceLogDao.delete(practiceLog)
+    }
 
 }
