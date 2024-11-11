@@ -2,6 +2,7 @@ package com.zybooks.practicepals.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zybooks.practicepals.manager.StopwatchManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,42 +11,22 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StopwatchViewModel @Inject constructor() : ViewModel() {
+class StopwatchViewModel @Inject constructor(
+    private val stopwatchManager: StopwatchManager
+) : ViewModel() {
 
-    private val _elapsedTime = MutableStateFlow(0L) // Time in milliseconds
-    val elapsedTime: StateFlow<Long> = _elapsedTime
-
-    private var isRunning = false
-    private var startTime = 0L
+    val elapsedTime: StateFlow<Long> = stopwatchManager.elapsedTime
+    val isRunning: StateFlow<Boolean> = stopwatchManager.isRunning
 
     fun startStopwatch() {
-        if (!isRunning) {
-            isRunning = true
-            startTime = System.currentTimeMillis() - _elapsedTime.value
-            viewModelScope.launch {
-                while (isRunning) {
-                    _elapsedTime.value = System.currentTimeMillis() - startTime
-                    delay(10L) // Update every 10 milliseconds
-                }
-            }
-        }
+        stopwatchManager.startStopwatch()
     }
 
     fun pauseStopwatch() {
-        isRunning = false
+        stopwatchManager.pauseStopwatch()
     }
 
     fun resetStopwatch() {
-        isRunning = false
-        _elapsedTime.value = 0L
+        stopwatchManager.resetStopwatch()
     }
-
-    fun isRunning(): Boolean {
-        return isRunning
-    }
-
-    fun hasStarted(): Boolean {
-        return elapsedTime.value != 0L
-    }
-
 }
