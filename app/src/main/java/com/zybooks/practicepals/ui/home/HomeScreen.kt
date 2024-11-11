@@ -38,8 +38,22 @@ fun HomeScreen(navController: NavController) {
             Text("Go to Stopwatch")
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
             Text("View Practice Bar Chart")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
+            Text("Clear Database")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
+            Text("Seed Database")
         }
 
         // Add more buttons here for other screens

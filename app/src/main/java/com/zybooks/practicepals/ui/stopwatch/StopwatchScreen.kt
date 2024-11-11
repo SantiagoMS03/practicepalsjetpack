@@ -20,6 +20,7 @@ fun StopwatchScreen(
     pieceViewModel: PieceViewModel = hiltViewModel()
 ) {
     val elapsedTime by stopwatchViewModel.elapsedTime.collectAsState()
+    val isRunning by stopwatchViewModel.isRunning.collectAsState() // Collect `isRunning` as state
 
     // Time formatting for display
     val minutes = (elapsedTime / 60000).toInt()
@@ -85,16 +86,16 @@ fun StopwatchScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(
                 onClick = {
-                    if (stopwatchViewModel.isRunning()) stopwatchViewModel.pauseStopwatch()
+                    if (isRunning) stopwatchViewModel.pauseStopwatch()
                     else stopwatchViewModel.startStopwatch()
                 }
             ) {
-                Text(if (stopwatchViewModel.isRunning()) "Pause" else "Start")
+                Text(if (isRunning) "Pause" else "Start")
             }
 
             Button(
                 onClick = {
-                    if (stopwatchViewModel.isRunning()) stopwatchViewModel.pauseStopwatch()
+                    if (isRunning) stopwatchViewModel.pauseStopwatch()
                     if (selectedPieceId != null) showDialog = true  // Only open dialog if a piece is selected
                 },
                 enabled = selectedPieceId != null

@@ -1,8 +1,10 @@
 package com.zybooks.practicepals
 
+import PracticeSessionBar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -28,8 +30,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PracticePalsTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    MainNavHost() // The navController is managed within MainNavHost
+                Column {
+                    PracticeSessionBar()
+                    Surface(color = MaterialTheme.colorScheme.background) {
+                        MainNavHost() // The navController is managed within MainNavHost
+                    }
                 }
             }
         }
