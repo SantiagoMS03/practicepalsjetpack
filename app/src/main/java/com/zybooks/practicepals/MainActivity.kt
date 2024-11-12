@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             PracticePalsTheme {
                 Column {
-                    PracticeSessionBar()
                     Surface(color = MaterialTheme.colorScheme.background) {
                         MainNavHost() // The navController is managed within MainNavHost
                     }

@@ -1,6 +1,7 @@
 // MetronomeScreen.kt
 package com.zybooks.practicepals.ui.metronome
 
+import PracticeSessionBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -41,106 +42,114 @@ fun MetronomeScreen(
     // Get the focus manager to control the keyboard
     val focusManager = LocalFocusManager.current
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {  // Replace clickable with pointerInput to remove ripple
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()  // Dismiss keyboard on outside click
-                })
-            }
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.Center),  // Center-align the content
-            horizontalAlignment = Alignment.CenterHorizontally
+
+    Column {
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Metronome", fontSize = 24.sp)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Exposed Dropdown for selecting a piece
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+            PracticeSessionBar()
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {  // Replace clickable with pointerInput to remove ripple
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()  // Dismiss keyboard on outside click
+                    })
+                }
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.Center),  // Center-align the content
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
-                    value = searchText,
-                    onValueChange = {
-                        searchText = it
-                        expanded = true  // Open dropdown as user types
-                    },
-                    label = { Text("Select Piece") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()  // Aligns dropdown with TextField
-                )
+                Text(text = "Metronome", fontSize = 24.sp)
 
-                // Dropdown Menu with filtered pieces
-                ExposedDropdownMenu(
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Exposed Dropdown for selecting a piece
+                ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                        focusManager.clearFocus()  // Dismiss keyboard when menu closes
-                    }
+                    onExpandedChange = { expanded = !expanded }
                 ) {
-                    filteredPieces.forEach { piece ->
-                        DropdownMenuItem(
-                            text = { Text(piece.name) },
-                            onClick = {
-                                selectedPiece = piece.name
-                                searchText = piece.name  // Set search text to selected name
-                                expanded = false
-                                focusManager.clearFocus()  // Hide keyboard on selection
-                            }
-                        )
+                    OutlinedTextField(
+                        value = searchText,
+                        onValueChange = {
+                            searchText = it
+                            expanded = true  // Open dropdown as user types
+                        },
+                        label = { Text("Select Piece") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()  // Aligns dropdown with TextField
+                    )
+
+                    // Dropdown Menu with filtered pieces
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {
+                            expanded = false
+                            focusManager.clearFocus()  // Dismiss keyboard when menu closes
+                        }
+                    ) {
+                        filteredPieces.forEach { piece ->
+                            DropdownMenuItem(
+                                text = { Text(piece.name) },
+                                onClick = {
+                                    selectedPiece = piece.name
+                                    searchText = piece.name  // Set search text to selected name
+                                    expanded = false
+                                    focusManager.clearFocus()  // Hide keyboard on selection
+                                }
+                            )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Tempo Display and Controls
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { metronomeViewModel.decreaseTempo() }) {
-                    Icon(painterResource(id = R.drawable.ic_minus), contentDescription = "Decrease BPM")
+                // Tempo Display and Controls
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { metronomeViewModel.decreaseTempo() }) {
+                        Icon(painterResource(id = R.drawable.ic_minus), contentDescription = "Decrease BPM")
+                    }
+
+                    Text(
+                        text = "$tempo BPM",
+                        fontSize = 32.sp,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clickable { metronomeViewModel.setShowBpmDialog(true) }
+                    )
+
+                    IconButton(onClick = { metronomeViewModel.increaseTempo() }) {
+                        Icon(painterResource(id = R.drawable.ic_plus), contentDescription = "Increase BPM")
+                    }
                 }
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Time Signature Display
                 Text(
-                    text = "$tempo BPM",
-                    fontSize = 32.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable { metronomeViewModel.setShowBpmDialog(true) }
+                    text = "Time Signature: $timeSignature",
+                    fontSize = 20.sp,
+                    modifier = Modifier.clickable { metronomeViewModel.setShowTimeSignatureDialog(true) }
                 )
 
-                IconButton(onClick = { metronomeViewModel.increaseTempo() }) {
-                    Icon(painterResource(id = R.drawable.ic_plus), contentDescription = "Increase BPM")
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Play/Pause Button
+                IconButton(
+                    onClick = { metronomeViewModel.togglePlayPause() },
+                    modifier = Modifier.size(80.dp)
+                ) {
+                    Icon(
+                        painterResource(id = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        modifier = Modifier.size(64.dp)
+                    )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Time Signature Display
-            Text(
-                text = "Time Signature: $timeSignature",
-                fontSize = 20.sp,
-                modifier = Modifier.clickable { metronomeViewModel.setShowTimeSignatureDialog(true) }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Play/Pause Button
-            IconButton(
-                onClick = { metronomeViewModel.togglePlayPause() },
-                modifier = Modifier.size(80.dp)
-            ) {
-                Icon(
-                    painterResource(id = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                    contentDescription = if (isPlaying) "Pause" else "Play",
-                    modifier = Modifier.size(64.dp)
-                )
             }
         }
     }

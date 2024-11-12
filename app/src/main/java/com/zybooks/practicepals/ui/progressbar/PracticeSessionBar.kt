@@ -34,6 +34,7 @@ fun PracticeSessionBar(
     val milliseconds = ((elapsedTime % 1000) / 10).toInt()
 
     val navController = LocalNavController.current // Access NavController without passing as a parameter
+    Log.d("NAV_CONTROLLER", "NavController is null: ${navController == null}")
 
     Box(
         modifier = Modifier

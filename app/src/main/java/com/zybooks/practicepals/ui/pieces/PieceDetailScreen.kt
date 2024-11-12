@@ -10,6 +10,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,6 +53,11 @@ fun PieceDetailScreen(
                 fontSize = 16.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
+//            Text(
+//                text = "Edit",
+//                fontSize = 16.sp,
+//                modifier = Modifier.clickable()
+//            )
 
             if (practiceLogs.isEmpty()) {
                 Column {

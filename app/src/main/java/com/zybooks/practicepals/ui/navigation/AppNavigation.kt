@@ -1,8 +1,10 @@
 package com.zybooks.practicepals.ui.navigation
 
+import PracticeSessionBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -25,7 +27,13 @@ val LocalNavController = staticCompositionLocalOf<NavHostController?> { null }
 @Composable
 fun MainNavHost() {
     val navController = rememberNavController()
+    val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = null).value?.destination?.route
+
     CompositionLocalProvider(LocalNavController provides navController) {
+        if (currentRoute != "stopwatch" && currentRoute != "metronome") {
+            PracticeSessionBar()
+        }
+
         NavHost(navController = navController, startDestination = "home") {
             composable("home") {
                 HomeScreen(navController)
