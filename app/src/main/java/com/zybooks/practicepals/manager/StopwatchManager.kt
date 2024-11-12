@@ -1,5 +1,6 @@
 package com.zybooks.practicepals.manager
 
+import com.zybooks.practicepals.viewmodel.UiStateViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ class StopwatchManager @Inject constructor() {
 
     fun startStopwatch() {
         if (!_isRunning.value) {
+
             _isRunning.value = true
             startTime = System.currentTimeMillis() - _elapsedTime.value
 

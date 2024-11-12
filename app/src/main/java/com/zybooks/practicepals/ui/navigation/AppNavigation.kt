@@ -5,7 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,18 +22,19 @@ import com.zybooks.practicepals.ui.pieces.NewPieceScreen
 import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
 import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.stopwatch.StopwatchScreen
+import com.zybooks.practicepals.viewmodel.UiStateViewModel
 
 // Define CompositionLocal for NavController
 val LocalNavController = staticCompositionLocalOf<NavHostController?> { null }
 
 // Main Navigation Host
 @Composable
-fun MainNavHost() {
+fun MainNavHost(uiStateViewModel: UiStateViewModel = hiltViewModel()) {
     val navController = rememberNavController()
-    val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = null).value?.destination?.route
+    val isPracticeBarVisible by uiStateViewModel.isPracticeBarVisible
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        if (currentRoute != "stopwatch" && currentRoute != "metronome") {
+        if (isPracticeBarVisible) {
             PracticeSessionBar()
         }
 
@@ -39,6 +43,7 @@ fun MainNavHost() {
                 HomeScreen(navController)
             }
             composable("metronome") {
+                uiStateViewModel.hidePracticeBarInScreen()
                 MetronomeScreen()
             }
             composable("pieces") {

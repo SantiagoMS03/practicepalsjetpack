@@ -12,12 +12,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.zybooks.practicepals.viewmodel.StopwatchViewModel
 import com.zybooks.practicepals.viewmodel.PieceViewModel
 import com.zybooks.practicepals.ui.practicelogs.NewPracticeLogDialog
+import com.zybooks.practicepals.viewmodel.UiStateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StopwatchScreen(
     stopwatchViewModel: StopwatchViewModel = hiltViewModel(),
-    pieceViewModel: PieceViewModel = hiltViewModel()
+    pieceViewModel: PieceViewModel = hiltViewModel(),
+    uiStateViewModel: UiStateViewModel = hiltViewModel()
 ) {
     val elapsedTime by stopwatchViewModel.elapsedTime.collectAsState()
     val isRunning by stopwatchViewModel.isRunning.collectAsState() // Collect `isRunning` as state

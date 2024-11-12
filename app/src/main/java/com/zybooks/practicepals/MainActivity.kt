@@ -23,6 +23,8 @@ import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
 import com.zybooks.practicepals.ui.stopwatch.StopwatchScreen
 import com.zybooks.practicepals.ui.theme.PracticePalsTheme
+import com.zybooks.practicepals.viewmodel.UiStateViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
