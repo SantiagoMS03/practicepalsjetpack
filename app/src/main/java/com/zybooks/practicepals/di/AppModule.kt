@@ -4,6 +4,7 @@ package com.zybooks.practicepals.di
 import android.content.Context
 import androidx.room.Room
 import com.zybooks.practicepals.database.AppDatabase
+import com.zybooks.practicepals.database.admin.AdminDatabaseManager
 import com.zybooks.practicepals.database.dao.PieceDao
 import com.zybooks.practicepals.database.dao.PracticeLogDao
 import com.zybooks.practicepals.database.repository.PieceRepository
@@ -48,6 +49,11 @@ object AppModule {
     @Provides
     @Singleton
     fun providePracticeLogRepository(practiceLogDao: PracticeLogDao): PracticeLogRepository = PracticeLogRepository(practiceLogDao)
+
+
+    @Provides
+    @Singleton
+    fun provideAdminDatabaseManager(practiceLogDao: PracticeLogDao, pieceDao: PieceDao): AdminDatabaseManager = AdminDatabaseManager(pieceDao, practiceLogDao)
 
     // Provide Metronome Tempo
     @Provides

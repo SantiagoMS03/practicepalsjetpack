@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.zybooks.practicepals.ui.admin.AdminScreen
 import com.zybooks.practicepals.ui.barchart.PracticeBarChartScreen
 import com.zybooks.practicepals.ui.home.HomeScreen
 import com.zybooks.practicepals.ui.metronome.MetronomeScreen
@@ -69,6 +70,9 @@ fun MainNavHost(uiStateViewModel: UiStateViewModel = hiltViewModel()) {
             }
             composable("practice_bar_chart") { // Add this composable route
                 PracticeBarChartScreen()
+            }
+            composable("admin") {
+                AdminScreen()
             }
 
         }

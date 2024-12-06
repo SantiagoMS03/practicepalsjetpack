@@ -9,6 +9,9 @@ interface PieceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(piece: Piece)  // Return the new row ID
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(pieces: List<Piece>): List<Long>
+
     @Update
     suspend fun update(piece: Piece)   // Return the number of rows updated
 
@@ -22,5 +25,5 @@ interface PieceDao {
     fun getAllPieces(): Flow<List<Piece>>
 
     @Query("DELETE FROM pieces")
-    suspend fun deleteAll()            // Return the number of rows deleted
+    suspend fun deleteAllPieces()
 }

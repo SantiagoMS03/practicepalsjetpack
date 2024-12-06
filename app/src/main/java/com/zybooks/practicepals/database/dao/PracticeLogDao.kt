@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.zybooks.practicepals.database.entities.Piece
 import com.zybooks.practicepals.database.entities.PracticeLog
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 interface PracticeLogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(practiceLog: PracticeLog)  // Return the new row ID
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(practiceLogs: List<PracticeLog>)
 
     @Update
     suspend fun update(practiceLog: PracticeLog)
@@ -39,5 +43,7 @@ interface PracticeLogDao {
     @Query("SELECT * FROM practice_logs WHERE date_added >= :startTime")
     fun getPracticeLogsFrom(startTime: Long): Flow<List<PracticeLog>>
 
+    @Query("DELETE FROM practice_logs")
+    suspend fun deleteAllPracticeLogs()
 
 }

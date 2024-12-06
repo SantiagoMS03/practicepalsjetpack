@@ -11,13 +11,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.zybooks.practicepals.viewmodel.AdminViewModel
+import com.zybooks.practicepals.viewmodel.PieceViewModel
 import com.zybooks.practicepals.viewmodel.UiStateViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     uiStateViewModel: UiStateViewModel = hiltViewModel()
-
 ) {
     LaunchedEffect(Unit) {
         uiStateViewModel.setPracticeBarVisibility(true)
@@ -58,14 +59,8 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
-            Text("Clear Database")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = { navController.navigate("practice_bar_chart") }) { // New Button
-            Text("Seed Database")
+        Button(onClick = { navController.navigate("admin")} ) { // New Button
+            Text("Admin")
         }
 
         // Add more buttons here for other screens

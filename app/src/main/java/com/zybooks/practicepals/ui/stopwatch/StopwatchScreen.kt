@@ -97,12 +97,15 @@ fun StopwatchScreen(
 
             Button(
                 onClick = {
-                    if (isRunning) stopwatchViewModel.pauseStopwatch()
-                    if (selectedPieceId != null) showDialog = true  // Only open dialog if a piece is selected
-                },
-                enabled = selectedPieceId != null
+                    if (selectedPieceId != null) {
+                        showDialog = true
+                        stopwatchViewModel.pauseStopwatch()
+                    } else {
+                        stopwatchViewModel.resetStopwatch()
+                    }
+                }
             ) {
-                Text("Stop")
+                Text(if (selectedPieceId != null) "Save" else "Stop")
             }
         }
     }
