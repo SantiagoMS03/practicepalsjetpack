@@ -63,6 +63,12 @@ fun HomeScreen(
             Text("Admin")
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("user_register")} ) { // New Button
+            Text("User")
+        }
+
         // Add more buttons here for other screens
     }
 }

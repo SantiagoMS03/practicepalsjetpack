@@ -23,6 +23,8 @@ import com.zybooks.practicepals.ui.pieces.NewPieceScreen
 import com.zybooks.practicepals.ui.pieces.PieceDetailScreen
 import com.zybooks.practicepals.ui.pieces.PieceListScreen
 import com.zybooks.practicepals.ui.stopwatch.StopwatchScreen
+import com.zybooks.practicepals.ui.user.UserLoginScreen
+import com.zybooks.practicepals.ui.user.UserRegisterScreen
 import com.zybooks.practicepals.viewmodel.UiStateViewModel
 
 // Define CompositionLocal for NavController
@@ -73,6 +75,12 @@ fun MainNavHost(uiStateViewModel: UiStateViewModel = hiltViewModel()) {
             }
             composable("admin") {
                 AdminScreen()
+            }
+            composable("user_register") {
+                UserRegisterScreen()
+            }
+            composable("user_login") {
+                UserLoginScreen()
             }
 
         }

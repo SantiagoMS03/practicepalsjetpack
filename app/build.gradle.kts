@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt) // Add this line
     alias(libs.plugins.kotlin.kapt) // Add this line
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -61,6 +62,10 @@ kapt {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
     val room_version = "2.6.1"
     // Core Android and Jetpack libraries
     implementation(libs.androidx.core.ktx)
